@@ -69,6 +69,7 @@ You need to use `SingleValueDropDownController` for single dropdown and `MultiVa
 - **submitButtonTextStyle**: Text style for the multi-dropdown submit button.
 - **listTextStyle**: Text style for dropdown list items.
 - **checkBoxProperty**: Customizes the properties of multiple checkboxes.
+- **closeOnTapOutside**: Set to `false` if the dropdown shouldn't close when the user taps outside of it.
 
 
 ## Contributing
