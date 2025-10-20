@@ -322,16 +322,16 @@ class _DropDownTextFieldState extends State<DropDownTextField>
     _heightFactor = _controller.drive(_easeInTween);
     _searchWidgetHeight = 60;
     _hintText = "Select Item";
+      _searchFocusNode.addListener(() {
+      if (!_searchFocusNode.hasFocus &&
+          !_textFieldFocusNode.hasFocus &&
+          _isExpanded &&
+          !widget.isMultiSelection) {
+        _isExpanded = !_isExpanded;
+        hideOverlay();
+      }
+    });
     if(widget.closeDropdownOnOutsideClick) {    
-        _searchFocusNode.addListener(() {
-        if (!_searchFocusNode.hasFocus &&
-            !_textFieldFocusNode.hasFocus &&
-            _isExpanded &&
-            !widget.isMultiSelection) {
-          _isExpanded = !_isExpanded;
-          hideOverlay();
-        }
-      });
       _textFieldFocusNode.addListener(() {
         if (!_searchFocusNode.hasFocus &&
             !_textFieldFocusNode.hasFocus &&
