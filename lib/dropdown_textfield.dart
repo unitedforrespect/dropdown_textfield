@@ -82,7 +82,8 @@ class DropDownTextField extends StatefulWidget {
       this.keyboardType,
       this.autovalidateMode,
       this.boxDecoration,
-      this.boxMargin})
+      this.boxMargin,
+      this.closeDropdownOnOutsideClick = true})
       : assert(
           !(initialValue != null && controller != null),
           "you cannot add both initialValue and singleController,\nset initial value using controller \n\tEg: SingleValueDropDownController(data:initial value) ",
@@ -132,6 +133,7 @@ class DropDownTextField extends StatefulWidget {
     this.autovalidateMode,
     this.boxDecoration,
     this.boxMargin,
+    this.closeDropdownOnOutsideClick = true,
   })  : assert(initialValue == null || controller == null,
             "you cannot add both initialValue and multiController\nset initial value using controller\n\tMultiValueDropDownController(data:initial value)"),
         assert(
@@ -257,6 +259,9 @@ class DropDownTextField extends StatefulWidget {
   ///customize checkbox property
   final CheckBoxProperty? checkBoxProperty;
 
+  ///by setting closeDropdownOnOutsideClick=true, the dropdown will be closed when the user clicks outside of the dropdown
+  final bool closeDropdownOnOutsideClick;
+
   @override
   _DropDownTextFieldState createState() => _DropDownTextFieldState();
 }
@@ -317,29 +322,31 @@ class _DropDownTextFieldState extends State<DropDownTextField>
     _heightFactor = _controller.drive(_easeInTween);
     _searchWidgetHeight = 60;
     _hintText = "Select Item";
-    _searchFocusNode.addListener(() {
-      if (!_searchFocusNode.hasFocus &&
-          !_textFieldFocusNode.hasFocus &&
-          _isExpanded &&
-          !widget.isMultiSelection) {
-        _isExpanded = !_isExpanded;
-        hideOverlay();
-      }
-    });
-    _textFieldFocusNode.addListener(() {
-      if (!_searchFocusNode.hasFocus &&
-          !_textFieldFocusNode.hasFocus &&
-          _isExpanded) {
-        _isExpanded = !_isExpanded;
-        hideOverlay();
-        if (!widget.readOnly &&
-            widget.singleController?.dropDownValue?.name != _cnt.text) {
-          setState(() {
-            _cnt.clear();
-          });
+    if(widget.closeDropdownOnOutsideClick) {    
+        _searchFocusNode.addListener(() {
+        if (!_searchFocusNode.hasFocus &&
+            !_textFieldFocusNode.hasFocus &&
+            _isExpanded &&
+            !widget.isMultiSelection) {
+          _isExpanded = !_isExpanded;
+          hideOverlay();
         }
-      }
-    });
+      });
+      _textFieldFocusNode.addListener(() {
+        if (!_searchFocusNode.hasFocus &&
+            !_textFieldFocusNode.hasFocus &&
+            _isExpanded) {
+          _isExpanded = !_isExpanded;
+          hideOverlay();
+          if (!widget.readOnly &&
+              widget.singleController?.dropDownValue?.name != _cnt.text) {
+            setState(() {
+              _cnt.clear();
+            });
+          }
+        }
+      });
+    }
     widget.singleController?.addListener(() {
       if (widget.singleController?.dropDownValue == null) {
         clearFun();
@@ -568,7 +575,7 @@ class _DropDownTextFieldState extends State<DropDownTextField>
             style: widget.textStyle,
             enabled: widget.isEnabled,
             readOnly: widget.readOnly,
-            onTapOutside: (event) {
+            onTapOutside: widget.closeDropdownOnOutsideClick ? (event) {
               final RenderObject? renderObject =
                   overlayKey.currentContext?.findRenderObject();
               if (renderObject is RenderBox) {
@@ -584,7 +591,7 @@ class _DropDownTextFieldState extends State<DropDownTextField>
                   _textFieldFocusNode.unfocus();
                 }
               }
-            },
+            } : null,
             onTap: () {
               _searchAutofocus = widget.searchAutofocus;
               if (!_isExpanded) {
