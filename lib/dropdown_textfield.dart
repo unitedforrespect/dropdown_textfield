@@ -83,7 +83,7 @@ class DropDownTextField extends StatefulWidget {
       this.autovalidateMode,
       this.boxDecoration,
       this.boxMargin,
-      this.closeDropdownOnOutsideClick = true})
+      this.closeOnTapOutside = true})
       : assert(
           !(initialValue != null && controller != null),
           "you cannot add both initialValue and singleController,\nset initial value using controller \n\tEg: SingleValueDropDownController(data:initial value) ",
@@ -133,7 +133,7 @@ class DropDownTextField extends StatefulWidget {
     this.autovalidateMode,
     this.boxDecoration,
     this.boxMargin,
-    this.closeDropdownOnOutsideClick = true,
+    this.closeOnTapOutside = true,
   })  : assert(initialValue == null || controller == null,
             "you cannot add both initialValue and multiController\nset initial value using controller\n\tMultiValueDropDownController(data:initial value)"),
         assert(
@@ -259,8 +259,8 @@ class DropDownTextField extends StatefulWidget {
   ///customize checkbox property
   final CheckBoxProperty? checkBoxProperty;
 
-  ///by setting closeDropdownOnOutsideClick=true, the dropdown will be closed when the user clicks outside of the dropdown
-  final bool closeDropdownOnOutsideClick;
+  ///by setting closeOnTapOutside=true, the dropdown will be closed when the user clicks outside of the dropdown
+  final bool closeOnTapOutside;
 
   @override
   _DropDownTextFieldState createState() => _DropDownTextFieldState();
@@ -573,7 +573,7 @@ class _DropDownTextFieldState extends State<DropDownTextField>
             style: widget.textStyle,
             enabled: widget.isEnabled,
             readOnly: widget.readOnly,
-            onTapOutside: widget.closeDropdownOnOutsideClick ? (event) {
+            onTapOutside: widget.closeOnTapOutside ? (event) {
               final RenderObject? renderObject =
                   overlayKey.currentContext?.findRenderObject();
               if (renderObject is RenderBox) {
