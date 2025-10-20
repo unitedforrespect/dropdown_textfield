@@ -331,22 +331,20 @@ class _DropDownTextFieldState extends State<DropDownTextField>
         hideOverlay();
       }
     });
-    if(widget.closeDropdownOnOutsideClick) {    
-      _textFieldFocusNode.addListener(() {
-        if (!_searchFocusNode.hasFocus &&
-            !_textFieldFocusNode.hasFocus &&
-            _isExpanded) {
-          _isExpanded = !_isExpanded;
-          hideOverlay();
-          if (!widget.readOnly &&
-              widget.singleController?.dropDownValue?.name != _cnt.text) {
-            setState(() {
-              _cnt.clear();
-            });
-          }
+    _textFieldFocusNode.addListener(() {
+      if (!_searchFocusNode.hasFocus &&
+          !_textFieldFocusNode.hasFocus &&
+          _isExpanded) {
+        _isExpanded = !_isExpanded;
+        hideOverlay();
+        if (!widget.readOnly &&
+            widget.singleController?.dropDownValue?.name != _cnt.text) {
+          setState(() {
+            _cnt.clear();
+          });
         }
-      });
-    }
+      }
+    });
     widget.singleController?.addListener(() {
       if (widget.singleController?.dropDownValue == null) {
         clearFun();
